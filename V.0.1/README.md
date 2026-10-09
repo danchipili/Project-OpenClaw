@@ -4,14 +4,13 @@ A Compose setup for running [OpenClaw](https://docs.openclaw.ai) (gateway + Cont
 
 - a thin wrapper image that applies a **one-time bootstrap** (gateway config, allowed browser origins) and then hands off to the official image's own entrypoint
 - a **named volume** for all state (config, auth, sessions, agent workspaces), so there are no file-permission problems
-- all secrets kept in a local `.env` file that is **never committed**
 
 ## Project layout
 
 ```
 .
 ├── .env                    # template: copy to .env and 
-├── docker-compose.yaml     # gateway service + optional 
+├── docker-compose.yaml     # gateway service + optional CLI 
 └── openclaw-custom/
     ├── Dockerfile          # wraps the official image
     └── entrypoint.sh       # first-run bootstrap, then starts OpenClaw
@@ -49,7 +48,7 @@ Generate a gateway token:
 openssl rand -hex 32
 ```
 
-Example `.env` (fake values):
+Configs for `.env`
 
 ```env
 BUILD_VERSION=v0-1
@@ -172,8 +171,6 @@ docker run --rm \
   busybox tar czf /backup/openclaw-state.tgz -C /data .
 ```
 
-(Replace `v0-1` with your `BUILD_VERSION`.)
-
 ## Re-running the first-run bootstrap
 
 The bootstrap sets `gateway.mode`, `gateway.bind` and the allowed browser origins, then disables memory search. It runs once. To run it again (for example after changing `OPENCLAW_GATEWAY_PORT`):
@@ -215,7 +212,3 @@ docker inspect ghcr.io/openclaw/openclaw:latest-browser \
 - The gateway port is bound to `127.0.0.1` only. Do not change it to `0.0.0.0` without reading OpenClaw's security docs.
 - Keep `.env` private: `chmod 600 .env`.
 - Free-tier Gemini usage may be used by Google to improve its products; don't send sensitive data through it.
-
-## License
-
-Add your license here.
