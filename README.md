@@ -28,7 +28,6 @@ See the README inside each version folder for the full setup, model commands, an
 
 ## Security
 
-- `.env` files hold API keys and are listed in `.gitignore`. Only `.env.example` belongs in the repo.
 - If a key is ever exposed, rotate it at the provider.
 
 ## Author
