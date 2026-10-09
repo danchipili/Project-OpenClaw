@@ -33,4 +33,5 @@ See the README inside each version folder for the full setup, model commands, an
 
 ## Author
 
-Created by **Danson Chipili**, 09/10/2026.
+Built by **Danson Chipili** on 9 October 2026, with plenty of Docker logs, a few "origin not allowed" errors, and one blocked push that saved the API keys. 🦞
+
