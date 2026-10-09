@@ -1,0 +1,76 @@
+name: openclaw-${BUILD_VERSION}
+
+services:
+  openclaw-gateway:
+    build:
+      context: ./openclaw-custom
+      args:
+        OPENCLAW_IMAGE: ${OPENCLAW_IMAGE}
+      #
+    #
+
+    image: openclaw-custom:local
+    pull_policy: never
+    container_name: openclaw-gateway
+    restart: unless-stopped
+    init: true
+
+    environment:
+      OPENCLAW_TZ: ${OPENCLAW_TZ:-UTC}
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
+      OPENCLAW_DEFAULT_MODEL: ${OPENCLAW_DEFAULT_MODEL}
+      OPENCLAW_GATEWAY_PORT: ${OPENCLAW_GATEWAY_PORT}
+      OPENCLAW_NO_RESPAWN: "1"
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+    #
+
+    volumes:
+      # Config, sessions, auth, and agent state persist here
+      - openclaw-state:/home/node/.openclaw
+    #
+
+    ports:
+      # Bound to localhost only. Do NOT change to 0.0.0.0 without reading the security docs.
+      - "127.0.0.1:${OPENCLAW_GATEWAY_PORT}:18789"
+    #
+  #
+
+  # One-shot CLI helper. Shares the gateway's network namespace, so it only
+  # works once the gateway container exists.
+  # Usage: docker compose run --rm openclaw-cli models status
+  openclaw-cli:
+    image: openclaw-custom:local
+    pull_policy: never
+    network_mode: "service:openclaw-gateway"
+    depends_on:
+      - openclaw-gateway
+    #
+
+    environment:
+      OPENCLAW_TZ: ${OPENCLAW_TZ:-UTC}
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
+      OPENCLAW_DEFAULT_MODEL: ${OPENCLAW_DEFAULT_MODEL}
+      OPENCLAW_GATEWAY_PORT: ${OPENCLAW_GATEWAY_PORT}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+    #
+
+    volumes:
+      - openclaw-state:/home/node/.openclaw
+    #
+
+    entrypoint: ["node", "openclaw.mjs"]
+    profiles: ["cli"]
+  #
+#
+
+volumes:
+  openclaw-state:
+    name: openclaw-volume-${BUILD_VERSION}
+  #
+#
