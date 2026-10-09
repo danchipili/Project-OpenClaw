@@ -2,13 +2,12 @@
 
 Docker Compose setups for running [OpenClaw](https://docs.openclaw.ai), a self-hosted AI agent gateway with a Control UI and terminal UI (TUI).
 
-Each version lives in its own folder with its own `README.md`, `docker-compose.yaml`, and `.env.example`.
 
 ## Versions
 
 | Folder | Description |
 |---|---|
-| [`V.0.1`](./V.0.1) | Gateway + first-run bootstrap, named volume for state, optional CLI helper |
+| [`V.0.1`](./V.0.1) | Gateway + first-run bootstrap, optional CLI helper |
 
 ## Quick start
 
