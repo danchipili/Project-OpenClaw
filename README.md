@@ -15,7 +15,6 @@ Docker Compose setups for running [OpenClaw](https://docs.openclaw.ai), a self-h
 git clone https://github.com/danchipili/Project-OpenClaw.git
 cd Project-OpenClaw/V.0.1
 
-cp .env.example .env        # then fill in your values (never commit .env)
 docker compose up -d --build
 ```
 
